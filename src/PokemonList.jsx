@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const PokemonList = ({ pokemonList }) => {
+  console.log('pokemenonList', pokemonList)
   return (
     <div className="list-container">
       {pokemonList.map(({ id, name }) => (
