@@ -30,7 +30,25 @@ jobs:
       - name: Deploy to Render
         if: ${{ github.event_name == 'push' && env.CONDITION == 'true' }}
         run: curl https://api.render.com/deploy/${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
-  
+      
+      - name: Discord notify (deployed)
+        if: ${{ success() && github.event_name == 'push' && env.CONDITION == 'true' }}
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: |
+            **Deployed + version tagged**
+
+      - name: Discord notify (failure)
+        if: ${{ failure() }}
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: |
+            **Build failed - commit ${{ github.event.head_commit.url }} by ${{ github.event.head_commit.author.username }} broke the build**
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
