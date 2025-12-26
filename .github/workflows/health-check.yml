@@ -1,0 +1,15 @@
+name: Periodic health check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: https://full-stack-open-pokedex-1-3ovb.onrender.com/health
+          max-attempts: 3
+          retry-delay: 5s
